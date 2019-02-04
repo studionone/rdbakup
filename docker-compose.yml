@@ -1,0 +1,26 @@
+version: '3.7'
+
+networks:
+  backups:
+    external: true
+    name: localdev
+
+services:
+  rdb:
+    image: rethinkdb
+    networks:
+      - backups
+    container_name: rethinkdb
+    ports:
+      - 28015:28015
+  rdbcmd:
+    build:
+      context: .
+    networks:
+      - backups
+    container_name: rdb-cmd
+    environment:
+      BUCKET:
+      AWS_ACCESS_KEY_ID:
+      AWS_SECRET_ACCESS_KEY:
+      RETHINK_HOST:
