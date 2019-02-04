@@ -1,0 +1,46 @@
+#!/usr/bin/env sh
+
+#
+# Type of backup: 'hourly' || 'daily' || 'weekly'
+#
+day=$(date +%u)
+hour=$(date +%H)
+tag=hourly
+
+if [ "$day" == "7" ] && [ "$hour" == "23" ]
+then
+    tag=weekly
+elif [ "$hour" == "23" ]
+then
+    tag=daily
+fi
+
+#
+# Perform the backup
+#
+backup_file=rdb-$(date +%Y%m%d-%H%M%S).tar.gz
+rethinkdb dump -c $RETHINK_HOST:28015 -f $backup_file
+
+#
+# Build the request parameters
+#
+date=$(date +"%a, %d %b %Y %T %z")
+host="$BUCKET.s3.amazonaws.com"
+content_type="application/x-compressed-tar"
+tagging_header="x-amz-tagging:type=$tag"
+sig_string="PUT\n\n$content_type\n$date\n$tagging_header\n/$BUCKET/$backup_file"
+signature=$(echo -en "${sig_string}" | openssl sha1 -hmac "$AWS_SECRET_ACCESS_KEY" -binary | base64)
+auth="AWS $AWS_ACCESS_KEY_ID:$signature"
+
+#
+# Upload backup to the bucket
+#
+curl \
+-X PUT \
+-T "$backup_file" \
+-H "Authorization: $auth" \
+-H "Host: $host" \
+-H "Content-Type: $content_type" \
+-H "Date: $date" \
+-H "$tagging_header" \
+"https://$host/$backup_file"
