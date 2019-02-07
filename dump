@@ -20,6 +20,7 @@ fi
 #
 backup_file=rdb-$(date +%Y%m%d-%H%M%S).tar.gz
 rethinkdb dump -c $RETHINK_HOST:28015 -f $backup_file
+echo $?
 
 #
 # Build the request parameters
@@ -44,3 +45,6 @@ curl \
 -H "Date: $date" \
 -H "$tagging_header" \
 "https://$host/$backup_file"
+echo $?
+
+exit 0
