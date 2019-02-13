@@ -45,3 +45,5 @@ curl \
 -H "Date: $date" \
 -H "$tagging_header" \
 "https://$host/$backup_file"
+
+exit 0
