@@ -6,13 +6,6 @@ networks:
     name: localdev
 
 services:
-  rdb:
-    image: rethinkdb
-    networks:
-      - backups
-    container_name: rethinkdb
-    ports:
-      - 28015:28015
   rdbcmd:
     build:
       context: .
@@ -24,3 +17,4 @@ services:
       AWS_ACCESS_KEY_ID:
       AWS_SECRET_ACCESS_KEY:
       RETHINK_HOST:
+      RETHINK_PASSWORD:

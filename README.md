@@ -3,8 +3,8 @@ The `Dockerfile` on this folder creates a very lightweight image to create and a
 Intended to be ran as a command and scheduled by using some sort of cron, it will naturally die after completion.Don't
 expect the container to stay up and running.
 
-It basically runs `rethinkdb dump -c $RETHINK_HOST:28015`, so there is only 1 environment variable you need to setup
-for that to work, `RETHINK_HOST`, which is the rethink host.
+It basically runs `rethinkdb dump` against the rethinkdb host. There is only 2 environment variables you need to setup
+for that to work, `RETHINK_HOST`, which is the rethink host and `RETHINK_PASSWORD`, which is the password.
 
 The second part of the script is the backup upload to the assigned S3 bucket. For this you will need 3 environment
 variables, `BUCKET`, `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
