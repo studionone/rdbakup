@@ -7,10 +7,10 @@ day=$(date +%u)
 hour=$(date +%H)
 tag=hourly
 
-if [ "$day" == "7" ] && [ "$hour" == "23" ]
+if [[ ${day} == "7" ]] && [[ ${hour} == "23" ]]
 then
     tag=weekly
-elif [ "$hour" == "23" ]
+elif [[ ${hour} == "23" ]]
 then
     tag=daily
 fi
@@ -19,8 +19,8 @@ fi
 # Perform the backup
 #
 backup_file=rdb-$(date +%Y%m%d-%H%M%S).tar.gz
-echo $RETHINK_PASSWORD > pw.txt
-rethinkdb dump -c $RETHINK_HOST:28015 -f $backup_file --password-file pw.txt
+echo ${RETHINK_PASSWORD} > pw.txt
+rethinkdb dump -c ${RETHINK_HOST}:28015 -f ${backup_file} --password-file pw.txt
 
 #
 # Build the request parameters
